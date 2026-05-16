@@ -1,3 +1,4 @@
+import { AiDialogButton } from '@/features/ai-dialog'
 import { Moon, Sun } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useTheme } from "@/app/providers/theme-provider";
@@ -51,6 +52,8 @@ export function AppLayout() {
         <main className="flex-1">
           <Outlet />
         </main>
+        
+        <AiDialogButton />
       </div>
     </div>
   );

@@ -1,0 +1,127 @@
+.buttonIcon {
+	position: fixed;
+	right: 24px;
+	bottom: 24px;
+	z-index: 50;
+
+	width: 60px !important;
+	height: 60px !important;
+	padding: 0 !important;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	background: #111827 !important;
+	color: #ffffff !important;
+	border: none !important;
+	border-radius: 50% !important;
+
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease,
+		background-color 0.2s ease;
+}
+
+.buttonIcon:hover {
+	background: #000000 !important;
+	transform: translateY(-2px) scale(1.04);
+	box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+}
+
+.buttonIcon:active {
+	transform: translateY(0) scale(0.97);
+}
+
+.buttonIcon svg {
+	width: 26px;
+	height: 26px;
+	color: #ffffff;
+}
+
+.header {
+	padding: 20px 0 16px;
+	border-bottom: 1px solid #e5e7eb;
+	margin-bottom: 16px;
+}
+
+.title {
+	font-size: 24px !important;
+	font-weight: 700 !important;
+	letter-spacing: -0.02em;
+	color: #111827;
+}
+
+.description {
+	margin-top: 6px;
+	font-size: 15px !important;
+	line-height: 1.5;
+	color: #6b7280;
+}
+
+.message {
+	max-width: 82%;
+	width: fit-content !important;
+
+	display: flex;
+	align-items: flex-start !important;
+	gap: 10px;
+
+	padding: 10px 12px !important;
+	margin-bottom: 10px;
+
+	border: 1px solid transparent !important;
+	border-radius: 18px !important;
+
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.leftMessage {
+	margin-right: auto;
+	background: #f3f4f6 !important;
+	color: #111827;
+	border-top-left-radius: 6px !important;
+}
+
+.rightMessage {
+	margin-left: auto;
+	background: #111827 !important;
+	color: #ffffff;
+	border-top-right-radius: 6px !important;
+}
+
+.leftMessage .icon {
+	color: #111827;
+}
+
+.rightMessage .icon {
+	color: #ffffff;
+}
+
+.icon {
+	width: 22px;
+	height: 22px;
+	flex-shrink: 0;
+}
+
+.message :global(.line-clamp-1) {
+	white-space: normal;
+	overflow: visible;
+	display: block;
+	line-height: 1.45;
+	font-size: 14px;
+}
+
+.message + .message {
+	margin-top: 6px;
+}
+
+.header + .message {
+	margin-top: 4px;
+}
+
+.list {
+	flex: 1;
+	overflow: scroll;
+}
