@@ -18,7 +18,6 @@ export function AppLayout() {
         <header className="mb-8 rounded-xl border border-black/10 bg-white dark:border-zinc-800 dark:bg-zinc-900">
           <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm text-black/70 dark:text-zinc-300">КопиМопс — финансовый друг студента, который помогает дожить до стипендии.</p>
               <h1 className="text-2xl font-semibold">Личный дашборд</h1>
             </div>
             <div className="flex flex-wrap items-center gap-2">

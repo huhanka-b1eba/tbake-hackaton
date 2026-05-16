@@ -66,14 +66,15 @@ export function TransactionsSection({
             size="sm"
             onClick={onExportCsv}
             disabled={transactions.length === 0}
+            className="w-full sm:w-auto"
           >
             <Download className="mr-2 h-4 w-4" />
             CSV
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="overflow-x-auto">
-        <div className="mb-4 grid gap-3 md:grid-cols-3 lg:grid-cols-6">
+      <CardContent className="px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
+        <div className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
           <div className="grid gap-2">
             <Label htmlFor="filter-category">Категория</Label>
             <Select value={filters.category} onValueChange={(value) => onFilterChange("category", value)}>
@@ -169,66 +170,134 @@ export function TransactionsSection({
             По текущим фильтрам транзакций нет.
           </div>
         ) : (
-          <table className="min-w-full border-separate border-spacing-y-3">
-            <thead>
-              <tr className="text-left text-xs uppercase tracking-wide text-black/50 dark:text-zinc-500">
-                <th className="px-4">Дата</th>
-                <th className="px-4">Категория</th>
-                <th className="px-4">Сумма</th>
-                <th className="px-4">Комментарий</th>
-                <th className="px-4 text-right">Действия</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            <div className="grid gap-3 lg:hidden">
               {transactions.map((transaction) => (
-                <tr key={transaction.id}>
-                  <td className="rounded-l-lg border-y border-l border-black/10 px-4 py-3 text-sm text-black/70 dark:border-zinc-800 dark:text-zinc-300">
-                    {formatTransactionDate(transaction.date)}
-                  </td>
-                  <td className="border-y border-black/10 px-4 py-3 dark:border-zinc-800">
-                    <Badge variant="secondary">{transaction.category}</Badge>
-                  </td>
-                  <td
-                    className={`border-y border-black/10 px-4 py-3 text-sm font-semibold dark:border-zinc-800 ${
-                      transaction.type === "income"
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-red-600 dark:text-red-400"
-                    }`}
-                  >
-                    {transaction.type === "income" ? "+" : "-"}
-                    {formatCurrency(transaction.amount)}
-                  </td>
-                  <td className="border-y border-black/10 px-4 py-3 text-sm text-black/70 dark:border-zinc-800 dark:text-zinc-300">
-                    {transaction.comment || "—"}
-                  </td>
-                  <td className="rounded-r-lg border-y border-r border-black/10 px-4 py-3 dark:border-zinc-800">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onEdit(transaction)}
-                        aria-label="Редактировать транзакцию"
-                        title="Редактировать"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onDelete(transaction.id)}
-                        aria-label="Удалить транзакцию"
-                        title="Удалить"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                <div
+                  key={transaction.id}
+                  className="rounded-lg border border-black/10 p-4 dark:border-zinc-800"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-2">
+                      <Badge variant="secondary">{transaction.category}</Badge>
+                      <p className="text-sm text-black/70 dark:text-zinc-300">
+                        {formatTransactionDate(transaction.date)}
+                      </p>
                     </div>
-                  </td>
-                </tr>
+                    <p
+                      className={`max-w-[11rem] break-words text-right text-sm font-semibold ${
+                        transaction.type === "income"
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-red-600 dark:text-red-400"
+                      }`}
+                    >
+                      {transaction.type === "income" ? "+" : "-"}
+                      {formatCurrency(transaction.amount)}
+                    </p>
+                  </div>
+
+                  <div className="mt-3 grid gap-1">
+                    <p className="text-xs uppercase tracking-wide text-black/50 dark:text-zinc-500">
+                      Комментарий
+                    </p>
+                    <p className="text-sm text-black/70 dark:text-zinc-300">
+                      {transaction.comment || "—"}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => onEdit(transaction)}
+                      aria-label="Редактировать транзакцию"
+                      title="Редактировать"
+                    >
+                      <Pencil className="mr-2 h-4 w-4" />
+                      Изменить
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => onDelete(transaction.id)}
+                      aria-label="Удалить транзакцию"
+                      title="Удалить"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Удалить
+                    </Button>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+
+            <div className="hidden overflow-x-auto lg:block">
+              <table className="min-w-full border-separate border-spacing-y-3">
+                <thead>
+                  <tr className="text-left text-xs uppercase tracking-wide text-black/50 dark:text-zinc-500">
+                    <th className="px-4">Дата</th>
+                    <th className="px-4">Категория</th>
+                    <th className="px-4">Сумма</th>
+                    <th className="px-4">Комментарий</th>
+                    <th className="px-4 text-right">Действия</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transactions.map((transaction) => (
+                    <tr key={transaction.id}>
+                      <td className="rounded-l-lg border-y border-l border-black/10 px-4 py-3 text-sm text-black/70 dark:border-zinc-800 dark:text-zinc-300">
+                        {formatTransactionDate(transaction.date)}
+                      </td>
+                      <td className="border-y border-black/10 px-4 py-3 dark:border-zinc-800">
+                        <Badge variant="secondary">{transaction.category}</Badge>
+                      </td>
+                      <td
+                        className={`border-y border-black/10 px-4 py-3 text-sm font-semibold dark:border-zinc-800 ${
+                          transaction.type === "income"
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-red-600 dark:text-red-400"
+                        }`}
+                      >
+                        {transaction.type === "income" ? "+" : "-"}
+                        {formatCurrency(transaction.amount)}
+                      </td>
+                      <td className="border-y border-black/10 px-4 py-3 text-sm text-black/70 dark:border-zinc-800 dark:text-zinc-300">
+                        {transaction.comment || "—"}
+                      </td>
+                      <td className="rounded-r-lg border-y border-r border-black/10 px-4 py-3 dark:border-zinc-800">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onEdit(transaction)}
+                            aria-label="Редактировать транзакцию"
+                            title="Редактировать"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onDelete(transaction.id)}
+                            aria-label="Удалить транзакцию"
+                            title="Удалить"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </CardContent>
     </Card>

@@ -31,7 +31,9 @@ export function QuickTransactionForm({
             placeholder="р авто 100 комментарий"
             aria-label="Быстрый ввод транзакции"
           />
-          <Button type="submit">Добавить</Button>
+          <Button type="submit" className="w-full md:w-auto">
+            Добавить
+          </Button>
         </form>
         {error ? (
           <p className="mt-3 text-sm font-medium text-red-600">{error}</p>

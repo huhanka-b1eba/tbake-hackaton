@@ -35,7 +35,7 @@ export function HomePage() {
         <Card>
           <CardHeader>
             <CardDescription>Баланс пользователя</CardDescription>
-            <CardTitle className="text-4xl leading-tight md:text-5xl">
+            <CardTitle className="break-words text-3xl leading-tight sm:text-4xl md:text-5xl">
               {formatCurrency(summary.balance)}
             </CardTitle>
           </CardHeader>
@@ -44,7 +44,7 @@ export function HomePage() {
         <Card>
           <CardHeader>
             <CardDescription>Доходы за месяц</CardDescription>
-            <CardTitle className="text-4xl leading-tight md:text-5xl">
+            <CardTitle className="break-words text-3xl leading-tight sm:text-4xl md:text-5xl">
               {formatCurrency(summary.totalIncome)}
             </CardTitle>
           </CardHeader>
@@ -53,7 +53,7 @@ export function HomePage() {
         <Card>
           <CardHeader>
             <CardDescription>Расходы за месяц</CardDescription>
-            <CardTitle className="text-4xl leading-tight md:text-5xl">
+            <CardTitle className="break-words text-3xl leading-tight sm:text-4xl md:text-5xl">
               {formatCurrency(summary.totalExpenses)}
             </CardTitle>
           </CardHeader>
