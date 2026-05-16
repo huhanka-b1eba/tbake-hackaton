@@ -31,6 +31,7 @@ export type TransactionSort = {
 };
 
 const STORAGE_KEY = "transactions";
+export const TRANSACTIONS_STORAGE_EVENT = "transactions-updated";
 
 export const initialFilters: TransactionFilters = {
   category: "all",
@@ -101,6 +102,7 @@ export function readTransactions(): Transaction[] {
 
 export function writeTransactions(transactions: Transaction[]) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+  window.dispatchEvent(new Event(TRANSACTIONS_STORAGE_EVENT));
 }
 
 export function isCurrentMonth(dateString: string) {

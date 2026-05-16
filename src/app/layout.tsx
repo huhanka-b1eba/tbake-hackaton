@@ -5,7 +5,7 @@ import { Button } from "@/shared/ui/button";
 
 const links = [
   { to: "/", label: "Главная" },
-  { to: "/anailitica", label: "Аналитика" },
+  { to: "/analytics", label: "Аналитика" },
 ];
 
 export function AppLayout() {
