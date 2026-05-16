@@ -13,7 +13,7 @@ export function AppLayout() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-white text-black dark:bg-zinc-950 dark:text-zinc-100">
+    <div className="min-h-screen bg-white text-black dark:bg-[#09090b] dark:text-zinc-100">
       <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-6">
         <header className="mb-8 rounded-xl border border-black/10 bg-white dark:border-zinc-800 dark:bg-zinc-900">
           <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
