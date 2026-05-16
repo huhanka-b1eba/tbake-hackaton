@@ -1,10 +1,9 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { Button } from "@/shared/ui/button";
-import { Separator } from "@/shared/ui/separator";
 
 const links = [
-  { to: "/", label: "Home" },
-  { to: "/sandbox", label: "Sandbox" },
+  { to: "/", label: "Главная" },
+  { to: "/anailitica", label: "Аналитика" },
 ];
 
 export function AppLayout() {
@@ -16,13 +15,12 @@ export function AppLayout() {
         <header className="mb-8 rounded-xl border border-black/10 bg-white">
           <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm">Мои финансы</p>
-              <h1 className="text-2xl font-semibold">Простая работа с деньгами</h1>
+              <p className="text-sm">КопиМопс — финансовый друг студента, который помогает дожить до стипендии.</p>
+              <h1 className="text-2xl font-semibold">Личный дашборд</h1>
             </div>
             <nav className="flex gap-2">
               {links.map((link) => {
                 const active = location.pathname === link.to;
-
                 return (
                   <Button
                     key={link.to}
@@ -34,10 +32,6 @@ export function AppLayout() {
                 );
               })}
             </nav>
-          </div>
-          <Separator />
-          <div className="px-4 py-3 text-sm">
-            Fast base for AI-heavy hackathon delivery.
           </div>
         </header>
         <main className="flex-1">
