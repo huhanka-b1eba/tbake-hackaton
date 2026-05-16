@@ -1,28 +1,92 @@
-import { useCounterStore } from "@/features/counter/model/use-counter-store";
+import { Card, CardHeader, CardDescription, CardTitle } from "@/shared/ui/card";
+import { formatCurrency } from "@/entities/transaction/model/transactions";
+import { useTransactions } from "@/entities/transaction/model/use-transactions";
+import { EditTransactionDialog } from "@/entities/transaction/ui/edit-transaction-dialog";
+import { TransactionsSection } from "@/entities/transaction/ui/transactions-section";
+import { QuickTransactionForm } from "@/pages/home/ui/quick-transaction-form";
 
 export function HomePage() {
-  const { value, increment } = useCounterStore();
+  const {
+    transactions,
+    visibleTransactions,
+    quickInput,
+    setQuickInput,
+    formError,
+    editingTransaction,
+    editError,
+    filters,
+    sort,
+    categories,
+    summary,
+    handleQuickSubmit,
+    handleDeleteTransaction,
+    handleStartEdit,
+    handleCloseEditDialog,
+    handleEditFieldChange,
+    handleEditSubmit,
+    handleFilterChange,
+    handleSortChange,
+    handleExportCsv,
+  } = useTransactions();
 
   return (
     <section className="grid gap-6">
-      <div className="rounded-xl border border-black bg-white p-6">
-        <h2 className="text-xl font-semibold">Home</h2>
-        <p className="mt-2 text-sm">
-          Simple page inside `pages/home/ui`, state lives in `features/counter`.
-        </p>
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardDescription>Баланс пользователя</CardDescription>
+            <CardTitle className="break-words text-3xl leading-tight sm:text-4xl md:text-5xl">
+              {formatCurrency(summary.balance)}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Доходы за месяц</CardDescription>
+            <CardTitle className="break-words text-3xl leading-tight sm:text-4xl md:text-5xl">
+              {formatCurrency(summary.totalIncome)}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Расходы за месяц</CardDescription>
+            <CardTitle className="break-words text-3xl leading-tight sm:text-4xl md:text-5xl">
+              {formatCurrency(summary.totalExpenses)}
+            </CardTitle>
+          </CardHeader>
+        </Card>
       </div>
 
-      <div className="rounded-xl border border-black bg-white p-6">
-        <p className="text-sm">Counter</p>
-        <p className="mt-2 text-4xl font-semibold">{value}</p>
-        <button
-          type="button"
-          onClick={increment}
-          className="mt-4 rounded-md bg-black px-4 py-2 text-sm font-medium text-white"
-        >
-          Increment
-        </button>
-      </div>
+      <QuickTransactionForm
+        value={quickInput}
+        error={formError}
+        onChange={setQuickInput}
+        onSubmit={handleQuickSubmit}
+      />
+
+      <TransactionsSection
+        transactions={visibleTransactions}
+        totalCount={transactions.length}
+        categories={categories}
+        filters={filters}
+        sort={sort}
+        onFilterChange={handleFilterChange}
+        onSortChange={handleSortChange}
+        onEdit={handleStartEdit}
+        onDelete={handleDeleteTransaction}
+        onExportCsv={handleExportCsv}
+      />
+
+      <EditTransactionDialog
+        transaction={editingTransaction}
+        error={editError}
+        onClose={handleCloseEditDialog}
+        onSubmit={handleEditSubmit}
+        onFieldChange={handleEditFieldChange}
+      />
     </section>
   );
 }

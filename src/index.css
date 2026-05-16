@@ -14,3 +14,8 @@ body {
   background: #ffffff;
   color: #111111;
 }
+
+html.dark body {
+  background: #09090b;
+  color: #f4f4f5;
+}

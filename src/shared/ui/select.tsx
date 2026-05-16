@@ -14,7 +14,7 @@ export const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-black bg-white px-3 py-2 text-sm",
+      "flex h-10 w-full items-center justify-between rounded-md border border-black bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
       className,
     )}
     {...props}
@@ -57,7 +57,7 @@ export const SelectContent = React.forwardRef<
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
-      className={cn("relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-black bg-white", className)}
+      className={cn("relative z-50 min-w-[8rem] overflow-hidden rounded-md border border-black bg-white dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100", className)}
       position={position}
       {...props}
     >
@@ -85,6 +85,7 @@ export const SelectItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-black hover:text-white",
+      "dark:hover:bg-zinc-100 dark:hover:text-zinc-950",
       className,
     )}
     {...props}
