@@ -48,6 +48,18 @@ type TransactionFormState = {
   comment: string;
 };
 
+type TransactionFilters = {
+  category: string;
+  type: "all" | TransactionType;
+  dateFrom: string;
+  dateTo: string;
+};
+
+type TransactionSort = {
+  field: "date" | "amount" | "category";
+  direction: "asc" | "desc";
+};
+
 const STORAGE_KEY = "transactions";
 
 const demoTransactions: Transaction[] = [
@@ -267,6 +279,16 @@ export function HomePage() {
   const [formError, setFormError] = useState("");
   const [editingTransaction, setEditingTransaction] = useState<TransactionFormState | null>(null);
   const [editError, setEditError] = useState("");
+  const [filters, setFilters] = useState<TransactionFilters>({
+    category: "all",
+    type: "all",
+    dateFrom: "",
+    dateTo: "",
+  });
+  const [sort, setSort] = useState<TransactionSort>({
+    field: "date",
+    direction: "desc",
+  });
 
   useEffect(() => {
     setTransactions(readTransactions());
@@ -359,6 +381,26 @@ export function HomePage() {
     setEditError("");
   }
 
+  function handleFilterChange<K extends keyof TransactionFilters>(
+    field: K,
+    value: TransactionFilters[K],
+  ) {
+    setFilters((currentFilters) => ({
+      ...currentFilters,
+      [field]: value,
+    }));
+  }
+
+  function handleSortChange<K extends keyof TransactionSort>(
+    field: K,
+    value: TransactionSort[K],
+  ) {
+    setSort((currentSort) => ({
+      ...currentSort,
+      [field]: value,
+    }));
+  }
+
   const { balance, totalIncome, totalExpenses } = useMemo(() => {
     const currentMonthTransactions = transactions.filter((transaction) =>
       isCurrentMonth(transaction.date),
@@ -382,6 +424,54 @@ export function HomePage() {
   const categories = useMemo(() => {
     return Array.from(new Set(transactions.map((transaction) => transaction.category)));
   }, [transactions]);
+
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((transaction) => {
+      if (filters.category !== "all" && transaction.category !== filters.category) {
+        return false;
+      }
+
+      if (filters.type !== "all" && transaction.type !== filters.type) {
+        return false;
+      }
+
+      const transactionDate = toDateInputValue(transaction.date);
+
+      if (filters.dateFrom && transactionDate < filters.dateFrom) {
+        return false;
+      }
+
+      if (filters.dateTo && transactionDate > filters.dateTo) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [filters, transactions]);
+
+  const visibleTransactions = useMemo(() => {
+    const nextTransactions = [...filteredTransactions];
+
+    nextTransactions.sort((left, right) => {
+      let comparison = 0;
+
+      if (sort.field === "date") {
+        comparison = new Date(left.date).getTime() - new Date(right.date).getTime();
+      }
+
+      if (sort.field === "amount") {
+        comparison = left.amount - right.amount;
+      }
+
+      if (sort.field === "category") {
+        comparison = left.category.localeCompare(right.category, "ru");
+      }
+
+      return sort.direction === "asc" ? comparison : -comparison;
+    });
+
+    return nextTransactions;
+  }, [filteredTransactions, sort]);
 
   return (
     <section className="grid gap-6">
@@ -434,7 +524,7 @@ export function HomePage() {
           {formError ? (
             <p className="mt-3 text-sm font-medium text-red-600">{formError}</p>
           ) : (
-            <p className="mt-3 text-sm text-black/60">
+            <p className="mt-3 text-sm text-black/60 dark:text-zinc-400">
               `р` означает расход, `д` означает доход. После категории пишется сумма,
               а все слова после суммы сохраняются как комментарий.
             </p>
@@ -445,17 +535,115 @@ export function HomePage() {
       <Card>
         <CardHeader>
           <CardTitle>Список транзакций</CardTitle>
-          <CardDescription>{transactions.length} записей</CardDescription>
+          <CardDescription>{visibleTransactions.length} из {transactions.length} записей</CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto">
-          {transactions.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-black/15 px-4 py-8 text-center text-sm text-black/60">
-              Транзакций пока нет.
+          <div className="mb-4 grid gap-3 md:grid-cols-3 lg:grid-cols-6">
+            <div className="grid gap-2">
+              <Label htmlFor="filter-category">Категория</Label>
+              <Select
+                value={filters.category}
+                onValueChange={(value) => handleFilterChange("category", value)}
+              >
+                <SelectTrigger id="filter-category">
+                  <SelectValue placeholder="Все категории" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Все категории</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="filter-type">Тип</Label>
+              <Select
+                value={filters.type}
+                onValueChange={(value) =>
+                  handleFilterChange("type", value as TransactionFilters["type"])
+                }
+              >
+                <SelectTrigger id="filter-type">
+                  <SelectValue placeholder="Все типы" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Все типы</SelectItem>
+                  <SelectItem value="income">Доходы</SelectItem>
+                  <SelectItem value="expense">Расходы</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="filter-date-from">Дата от</Label>
+              <Input
+                id="filter-date-from"
+                type="date"
+                value={filters.dateFrom}
+                onChange={(event) => handleFilterChange("dateFrom", event.target.value)}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="filter-date-to">Дата до</Label>
+              <Input
+                id="filter-date-to"
+                type="date"
+                value={filters.dateTo}
+                onChange={(event) => handleFilterChange("dateTo", event.target.value)}
+              />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="sort-field">Сортировка</Label>
+              <Select
+                value={sort.field}
+                onValueChange={(value) =>
+                  handleSortChange("field", value as TransactionSort["field"])
+                }
+              >
+                <SelectTrigger id="sort-field">
+                  <SelectValue placeholder="Поле сортировки" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="date">По дате</SelectItem>
+                  <SelectItem value="amount">По сумме</SelectItem>
+                  <SelectItem value="category">По категории</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="sort-direction">Порядок</Label>
+              <Select
+                value={sort.direction}
+                onValueChange={(value) =>
+                  handleSortChange("direction", value as TransactionSort["direction"])
+                }
+              >
+                <SelectTrigger id="sort-direction">
+                  <SelectValue placeholder="Порядок сортировки" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="desc">По убыванию</SelectItem>
+                  <SelectItem value="asc">По возрастанию</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {visibleTransactions.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-black/15 px-4 py-8 text-center text-sm text-black/60 dark:border-zinc-700 dark:text-zinc-400">
+              По текущим фильтрам транзакций нет.
             </div>
           ) : (
             <table className="min-w-full border-separate border-spacing-y-3">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wide text-black/50">
+                <tr className="text-left text-xs uppercase tracking-wide text-black/50 dark:text-zinc-500">
                   <th className="px-4">Дата</th>
                   <th className="px-4">Категория</th>
                   <th className="px-4">Сумма</th>
@@ -464,26 +652,26 @@ export function HomePage() {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((transaction) => (
+                {visibleTransactions.map((transaction) => (
                   <tr key={transaction.id}>
-                    <td className="rounded-l-lg border-y border-l border-black/10 px-4 py-3 text-sm text-black/70">
+                    <td className="rounded-l-lg border-y border-l border-black/10 px-4 py-3 text-sm text-black/70 dark:border-zinc-800 dark:text-zinc-300">
                       {formatTransactionDate(transaction.date)}
                     </td>
-                    <td className="border-y border-black/10 px-4 py-3">
+                    <td className="border-y border-black/10 px-4 py-3 dark:border-zinc-800">
                       <Badge variant="secondary">{transaction.category}</Badge>
                     </td>
                     <td
-                      className={`border-y border-black/10 px-4 py-3 text-sm font-semibold ${
-                        transaction.type === "income" ? "text-emerald-600" : "text-red-600"
+                      className={`border-y border-black/10 px-4 py-3 text-sm font-semibold dark:border-zinc-800 ${
+                        transaction.type === "income" ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
                       }`}
                     >
                       {transaction.type === "income" ? "+" : "-"}
                       {formatCurrency(transaction.amount)}
                     </td>
-                    <td className="border-y border-black/10 px-4 py-3 text-sm text-black/70">
+                    <td className="border-y border-black/10 px-4 py-3 text-sm text-black/70 dark:border-zinc-800 dark:text-zinc-300">
                       {transaction.comment || "—"}
                     </td>
-                    <td className="rounded-r-lg border-y border-r border-black/10 px-4 py-3">
+                    <td className="rounded-r-lg border-y border-r border-black/10 px-4 py-3 dark:border-zinc-800">
                       <div className="flex justify-end gap-2">
                         <Button
                           type="button"
