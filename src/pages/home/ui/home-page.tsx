@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardDescription, CardTitle } from "@/shared/ui/card";
 import { formatCurrency } from "@/entities/transaction/model/transactions";
-import { useTransactions } from "@/entities/transaction/model/use-transactions";
+import { useTransactions } from "@/entities/transaction/model/useTransactions";
 import { EditTransactionDialog } from "@/entities/transaction/ui/edit-transaction-dialog";
 import { TransactionsSection } from "@/entities/transaction/ui/transactions-section";
 import { QuickTransactionForm } from "@/pages/home/ui/quick-transaction-form";

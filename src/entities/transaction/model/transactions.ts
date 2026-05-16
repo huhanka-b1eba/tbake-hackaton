@@ -30,7 +30,7 @@ export type TransactionSort = {
   direction: "asc" | "desc";
 };
 
-const STORAGE_KEY = "transactions";
+export const STORAGE_KEY = "transactions";
 export const TRANSACTIONS_STORAGE_EVENT = "transactions-updated";
 
 export const initialFilters: TransactionFilters = {

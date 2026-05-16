@@ -30,15 +30,18 @@ export const AiPromptBox: FC<IAiPromptBox> = ({
 
 		setMessage({ text: prompt, isMyMessage: true })
 
-		const responseText = await getAIResponse(prompt)
+		try {
+			const responseText = await getAIResponse(prompt)
 
-		if (responseText === null) return
+			if (responseText !== null) {
+				setMessage({ text: responseText, isMyMessage: false })
+			}
 
-		setMessage({ text: responseText, isMyMessage: false })
-
-		setPrompt('')
-		setLoading(false)
-		setIsLoadingOpenAi(false)
+			setPrompt('')
+		} finally {
+			setLoading(false)
+			setIsLoadingOpenAi(false)
+		}
 	}
 
 	return (

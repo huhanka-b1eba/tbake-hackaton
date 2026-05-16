@@ -5,7 +5,7 @@ import {
   type Transaction,
 } from "@/entities/transaction/model/transactions";
 
-export function useStoredTransactions() {
+export function storeTransactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {

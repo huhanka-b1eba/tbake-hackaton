@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useStoredTransactions } from "@/entities/transaction/model/use-stored-transactions";
+import { storeTransactions } from "@/entities/transaction/model/storeTransactions";
 import {
   getAnalyticsSummary,
   getCategoryChartConfig,
@@ -9,7 +9,7 @@ import {
 } from "@/entities/analytics/lib/analytics";
 
 export function useAnalytics() {
-  const transactions = useStoredTransactions();
+  const transactions = storeTransactions();
 
   return useMemo(() => {
     const currentMonthTransactions = getCurrentMonthTransactions(transactions);
