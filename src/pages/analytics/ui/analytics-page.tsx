@@ -1,7 +1,7 @@
 import { AnalyticsSummary } from "@/entities/analytics/ui/analytics-summary";
 import { MonthlyOverviewChart } from "@/entities/analytics/ui/monthly-overview-chart";
 import { SpendingBreakdown } from "@/entities/analytics/ui/spending-breakdown";
-import { useAnalytics } from "@/entities/analytics/model/use-analytics";
+import { useAnalytics } from "@/entities/analytics/model/useAnalytics";
 
 export function AnalyticsPage() {
   const { summary, categoryChartData, categoryChartConfig, monthlyChartData } = useAnalytics();
